@@ -53,25 +53,21 @@ const getApplication = asyncHandler(async (req, res) => {
 
   if (req.user.user_type === "admin") {
     result = await pool.query(
-      `
-        SELECT a.*, j.title AS job_title, u.full_name AS applicant_name, u.email AS applicant_email
-        FROM applications a
-        JOIN jobs j ON a.job_id = j.id
-        JOIN users u ON a.applicant_id = u.id
-        WHERE j.posted_by = $1
-        ORDER BY a.applied_at DESC
-        `,
+      `SELECT a.*, j.title AS job_title, u.full_name AS applicant_name, u.email AS applicant_email
+         FROM applications a
+         JOIN jobs j ON a.job_id = j.id
+         JOIN users u ON a.applicant_id = u.id
+         WHERE j.posted_by = $1
+         ORDER BY a.applied_at DESC`,
       [req.user.id]
     );
   } else {
     result = await pool.query(
-      `
-        SELECT a.*, j.title AS job_title
-        FROM applications a
-        JOIN jobs j ON a.job_id = j.id
-        WHERE a.applicant_id = $1
-        ORDER BY a.applied_at DESC
-        `,
+      `SELECT a.*, j.title AS job_title
+         FROM applications a
+         JOIN jobs j ON a.job_id = j.id
+         WHERE a.applicant_id = $1
+         ORDER BY a.applied_at DESC`,
       [req.user.id]
     );
   }

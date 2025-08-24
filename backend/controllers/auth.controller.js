@@ -81,6 +81,7 @@ const loginUser = asyncHandler(async (req, res, next) => {
   res.status(200).json({
     message: "Login successful",
     success: true,
+    token,
     user: {
       id: user.id,
       email: user.email,
@@ -113,4 +114,9 @@ const changePassword = asyncHandler(async (req, res, next) => {
   res.status(200).json({ message: "Password changed successfully" });
 });
 
-module.exports = { registerUser, loginUser ,changePassword };
+const logoutUser = (req, res) => {
+  res.clearCookie("access_token");
+  res.json({ message: "Logged out successfully" });
+};
+
+module.exports = { registerUser, loginUser ,changePassword,logoutUser };

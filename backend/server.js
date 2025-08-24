@@ -7,11 +7,20 @@ const { errorHandler } = require("./middlewares/errorHandler.middleare");
 const jobsRoutes = require("./routes/job.routes");
 const applicationRoutes = require("./routes/application.routes");
 const cookieParser = require("cookie-parser");
+const bodyParser = require("body-parser");
+const cors = require("cors");
 app.use(express.urlencoded({ extended: true }));
 const PORT = process.env.PORT;
 
 app.use(express.json());
 app.use(cookieParser());
+app.use(
+  cors({
+    origin: "http://localhost:3000", // frontend URL
+    credentials: true,
+  })
+);
+app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
   res.status(200).json({
