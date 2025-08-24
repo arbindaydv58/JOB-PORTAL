@@ -1,0 +1,182 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  background-color: #fff;
+  border-bottom: 1px solid #ddd;
+  font-family: Arial, sans-serif;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+/* Logo */
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  color: #0033cc;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.logo:hover {
+  color: #001a66;
+}
+
+/* Center links */
+.navbar-center {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+}
+
+.navbar-center a {
+  margin: 0 12px;
+  text-decoration: none;
+  color: #000;
+  font-size: 18px;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.navbar-center a:hover {
+  color: #0033cc;
+}
+
+/* Underline effect on hover */
+.navbar-center a::after {
+  content: "";
+  display: block;
+  width: 0;
+  height: 2px;
+  background: #0033cc;
+  transition: width 0.3s;
+  margin: auto;
+}
+
+.navbar-center a:hover::after {
+  width: 100%;
+}
+
+/* Right buttons */
+.navbar-right {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.navbar-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* Variants */
+.login-btn {
+  background-color: transparent;
+  color: #0033cc;
+  border: 1px solid #0033cc;
+}
+
+.login-btn:hover {
+  background-color: #0033cc;
+  color: #fff;
+}
+
+.signup-btn {
+  background-color: #0033cc;
+  color: #fff;
+}
+
+.signup-btn:hover {
+  background-color: #001a66;
+}
+
+.dashboard-btn {
+  background-color: #28a745;
+  color: #fff;
+}
+
+.dashboard-btn:hover {
+  background-color: #1e7e34;
+}
+
+.logout-btn {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.logout-btn:hover {
+  background-color: #a71d2a;
+}
+
+/* Responsive navbar */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    padding: 12px;
+  }
+
+  .navbar-center {
+    margin: 10px 0;
+    flex-wrap: wrap;
+  }
+
+  .navbar-right {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .navbar-center a {
+    font-size: 16px;
+    margin: 6px;
+  }
+
+  .navbar-btn {
+    font-size: 14px;
+    padding: 6px 12px;
+  }
+}
+
+/* Dropdown container */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Dropdown menu */
+/* Dropdown container */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Dropdown menu */
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  min-width: 180px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  z-index: 10;
+}
+
+/* Dropdown items */
+.dropdown-item {
+  display: block;
+  padding: 10px 14px;
+  color: #333;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.dropdown-item:hover {
+  background: #f2f2f2;
+}
