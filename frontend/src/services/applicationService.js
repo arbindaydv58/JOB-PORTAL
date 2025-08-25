@@ -1,14 +1,15 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api/applications";
+const API_URL = "http://localhost:5000/api/application";
 
 // Axios instance with auth token
 const authAxios = axios.create({
   baseURL: API_URL,
   withCredentials: true,
+    headers: { "Content-Type": "application/json"}
 });
 
-// Automatically attach token if available
+// Automatically attach token
 authAxios.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
   if (token) config.headers.Authorization = `Bearer ${token}`;
@@ -19,23 +20,27 @@ authAxios.interceptors.request.use((config) => {
 export const createApplication = async (data) => {
   try {
     const res = await authAxios.post("/createApplication", data);
-    return res.data; // backend response
+    console.log("Axios data check",res);
+    
+    return res.data;
   } catch (err) {
     throw new Error(err.response?.data?.message || "Failed to apply");
   }
 };
 
-// Get all applications for the logged-in user
+// Get applications (for user or admin)
 export const getApplications = async () => {
   try {
     const res = await authAxios.get("/getApplication");
+    console.log("hello there",res);
+    
     return res.data; // array of applications
   } catch (err) {
     throw new Error(err.response?.data?.message || "Failed to fetch applications");
   }
 };
 
-// Update an application's status (e.g., for admin)
+// Update application status (admin)
 export const updateApplication = async (appId, status) => {
   try {
     const res = await authAxios.patch(`/${appId}`, { status });
@@ -45,7 +50,7 @@ export const updateApplication = async (appId, status) => {
   }
 };
 
-// Withdraw an application
+// Withdraw an application (jobseeker)
 export const withdrawApplication = async (appId) => {
   try {
     const res = await authAxios.delete(`/${appId}`);

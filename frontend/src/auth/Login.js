@@ -1,5 +1,7 @@
+
+
 import React, { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
 function Login() {
@@ -31,20 +33,69 @@ function Login() {
   };
 
   return (
-    <div className="login-container">
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
-        <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} required />
-        <input type="password" name="password" placeholder="Password" value={formData.password} onChange={handleChange} required />
-        <select name="user_type" value={formData.user_type} onChange={handleChange}>
-          <option value="jobseeker">Job Seeker</option>
-          <option value="admin">Admin</option>
-        </select>
-        <button type="submit">Login</button>
-      </form>
-      {message && <p>{message}</p>}
+    <div
+      className="d-flex justify-content-center align-items-center vh-100"
+      style={{
+        backgroundImage:
+          "url('https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1350&q=80')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
+      <div className="card shadow-lg p-4" style={{ maxWidth: "420px", width: "100%", borderRadius: "15px" }}>
+        <h2 className="text-center mb-4">Login</h2>
+        <form onSubmit={handleSubmit} className="d-flex flex-column gap-3">
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+            className="form-control"
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+            className="form-control"
+          />
+          <select
+            name="user_type"
+            value={formData.user_type}
+            onChange={handleChange}
+            className="form-select"
+          >
+            <option value="jobseeker">Job Seeker</option>
+            <option value="admin">Admin</option>
+          </select>
+          <button type="submit" className="btn btn-primary w-100">
+            Login
+          </button>
+        </form>
+
+        {/* Extra Links */}
+        <div className="text-center mt-3">
+          <Link to="/forgot-password" className="text-decoration-none">
+            Forgot Password?
+          </Link>
+        </div>
+        <div className="text-center mt-2">
+          Don’t have an account?{" "}
+          <Link to="/signup" className="text-decoration-none">
+            Sign up here
+          </Link>
+        </div>
+
+        {/* Message */}
+        {message && <p className="text-center mt-3 text-danger">{message}</p>}
+      </div>
     </div>
   );
 }
 
 export default Login;
+

@@ -1,4 +1,7 @@
+
+
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { registerUser } from "../services/authService";
 
 function Signup() {
@@ -11,117 +14,145 @@ function Signup() {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleChange = (e) =>
+  const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage("");
     setLoading(true);
     try {
-      const res = await registerUser(formData);
-      setMessage(res.data.message || "Registration successful!");
-      setFormData({
-        full_name: "",
-        email: "",
-        password: "",
-        user_type: "jobseeker",
-      });
-    } catch (err) {
-      setMessage(err.response?.data?.message || "Registration failed");
+      await registerUser(formData);
+      setMessage("Signup successful!");
+    } catch (error) {
+      setMessage("Error signing up. Please try again.");
     }
     setLoading(false);
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50 p-4">
-      <div className="bg-white shadow-2xl rounded-2xl w-full max-w-md p-8 border border-gray-200">
-        <h2 className="text-3xl font-extrabold mb-6 text-center text-gray-900">
-          Create Account
-        </h2>
-        {message && (
-          <p
-            className={`mb-4 text-center p-3 rounded-lg ${
-              message.includes("success")
-                ? "bg-green-100 text-green-800"
-                : "bg-red-100 text-red-800"
-            }`}
-          >
-            {message}
-          </p>
-        )}
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div>
-            <label className="block text-gray-700 mb-2 font-medium">
+    <div
+      className="d-flex justify-content-center align-items-center"
+      style={{
+        backgroundImage:
+          "url('https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1600&q=80')", 
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        minHeight: "100vh",
+      }}
+    >
+      <div
+        className="card shadow-lg p-4"
+        style={{
+          maxWidth: "500px",
+          width: "100%",
+          backdropFilter: "blur(6px)",
+          backgroundColor: "rgba(255, 255, 255, 0.9)",
+        }}
+      >
+        <h3 className="text-center mb-4">Create an Account</h3>
+
+        <form onSubmit={handleSubmit}>
+          {/* Full Name */}
+          <div className="mb-3">
+            <label htmlFor="fullName" className="form-label">
               Full Name
             </label>
             <input
               type="text"
+              className="form-control"
+              id="fullName"
               name="full_name"
               value={formData.full_name}
               onChange={handleChange}
-              placeholder="John Doe"
               required
-              className="w-full px-5 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-400 transition"
             />
           </div>
-          <div>
-            <label className="block text-gray-700 mb-2 font-medium">Email</label>
+
+          {/* Email */}
+          <div className="mb-3">
+            <label htmlFor="inputEmail4" className="form-label">
+              Email
+            </label>
             <input
               type="email"
+              className="form-control"
+              id="inputEmail4"
               name="email"
               value={formData.email}
               onChange={handleChange}
-              placeholder="email@example.com"
               required
-              className="w-full px-5 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-400 transition"
             />
           </div>
-          <div>
-            <label className="block text-gray-700 mb-2 font-medium">
+
+          {/* Password */}
+          <div className="mb-3">
+            <label htmlFor="inputPassword4" className="form-label">
               Password
             </label>
             <input
               type="password"
+              className="form-control"
+              id="inputPassword4"
               name="password"
               value={formData.password}
               onChange={handleChange}
-              placeholder="********"
               required
-              className="w-full px-5 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-400 transition"
             />
           </div>
-          <div>
-            <label className="block text-gray-700 mb-2 font-medium">
+
+          {/* User Type */}
+          <div className="mb-3">
+            <label htmlFor="userType" className="form-label">
               User Type
             </label>
             <select
+              id="userType"
+              className="form-select"
               name="user_type"
               value={formData.user_type}
               onChange={handleChange}
-              className="w-full px-5 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-400 transition"
             >
               <option value="jobseeker">Job Seeker</option>
-              <option value="admin">Admin</option>
+              <option value="employer">Employer</option>
             </select>
           </div>
+
+          {/* Checkbox */}
+          <div className="form-check mb-3">
+            <input className="form-check-input" type="checkbox" id="gridCheck" />
+            <label className="form-check-label" htmlFor="gridCheck">
+              Agree to Terms & Conditions
+            </label>
+          </div>
+
+          {/* Submit */}
           <button
             type="submit"
+            className="btn btn-primary w-100"
             disabled={loading}
-            className="w-full bg-purple-600 text-white py-3 rounded-xl font-semibold hover:bg-purple-700 transition duration-200"
           >
-            {loading ? "Registering..." : "Sign Up"}
+            {loading ? "Signing up..." : "Sign Up"}
           </button>
         </form>
-        <p className="text-center text-gray-500 text-sm mt-6">
+
+        {/* Already have account link */}
+        <p className="text-center mt-3">
           Already have an account?{" "}
-          <a href="/login" className="text-purple-600 hover:underline font-medium">
-            Login
-          </a>
+          <Link to="/login" className="text-decoration-none">
+            Login here
+          </Link>
         </p>
+
+        {/* Message */}
+        {message && <p className="text-center mt-2 text-success">{message}</p>}
       </div>
     </div>
   );
 }
 
 export default Signup;
+
+
+
+

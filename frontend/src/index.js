@@ -27,18 +27,42 @@ root.render(
     <AuthProvider>
       <Navbar />
       <Routes>
+        {/* Public routes */}
         <Route path="/" element={<HomePage />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/about" element={<AboutPage />} />
-        <Route path="/my-applications" element={<MyApplications />} />
-        <Route path="/applyjob/:jobId" element={<ApplyJob />} />
         <Route path="/company" element={<CompanyPage />} />
         <Route path="/jobs" element={<JobList />} />
         <Route path="/jobs/:id" element={<JobDetail />} />
-        <Route path="/admin/applications" element={<AdminApplications />} />
+
+        {/* Jobseeker-only routes */}
+        <Route
+          path="/my-applications"
+          element={
+            <ProtectedRoute allowedRoles={["jobseeker"]}>
+              <MyApplications />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/applyjob/:jobId"
+          element={
+            <ProtectedRoute allowedRoles={["jobseeker"]}>
+              <ApplyJob />
+            </ProtectedRoute>
+          }
+        />
 
         {/* Admin-only routes */}
+        <Route
+          path="/admin/applications"
+          element={
+            <ProtectedRoute allowedRoles={["admin"]}>
+              <AdminApplications/>
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/create-job"
           element={
@@ -64,6 +88,7 @@ root.render(
           }
         />
 
+        {/* Catch-all */}
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
