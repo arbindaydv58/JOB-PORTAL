@@ -2,8 +2,9 @@ const express = require("express");
 const {
   createApplication,
   getApplication,
-  updateApplication,
+  updateApplication,uploadCV,
   withdrawApplication,
+  
 } = require("../controllers/application.controller");
 const { authenticate } = require("../middlewares/auth.middleware");
 
@@ -13,6 +14,7 @@ const router = express.Router();
 router.post(
   "/createApplication",
   authenticate(["jobseeker"]),
+  uploadCV,
   createApplication
 );
 router.get(

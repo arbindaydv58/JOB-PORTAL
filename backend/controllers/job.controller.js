@@ -120,10 +120,44 @@ const deleteJob = asyncHandler(async (req, res) => {
   });
 });
 
+// Search Job
+const searchJobs = asyncHandler(async (req, res) => {
+  let { query, location } = req.query;
+
+  // If both are empty, throw error
+  if (!query && !location) {
+    throw new CustomError("Search query or location is required", 400);
+  }
+
+  // Use '%' if missing so it matches everything
+  query = query ? `%${query}%` : '%';
+  location = location ? `%${location}%` : '%';
+
+  const sql = `
+    SELECT jobs.*, users.full_name AS posted_by_name
+    FROM jobs
+    JOIN users ON jobs.posted_by = users.id
+    WHERE (jobs.title ILIKE $1 OR jobs.description ILIKE $1 OR jobs.company ILIKE $1)
+      AND jobs.location ILIKE $2
+    ORDER BY jobs.created_at DESC
+  `;
+
+  const values = [query, location];
+
+  const result = await pool.query(sql, values);
+
+  res.json({
+    success: true,
+    data: result.rows,
+  });
+});
+
+
 module.exports = {
   getJobs,
   getJobById,
   createJob,
   updateJob,
   deleteJob,
+  searchJobs
 };

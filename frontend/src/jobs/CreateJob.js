@@ -32,7 +32,7 @@ function CreateJob() {
       className="d-flex justify-content-center align-items-start py-5"
       style={{
         backgroundImage:
-          "url('https://images.unsplash.com/photo-1581091870626-1c4d4f3d61c1?auto=format&fit=crop&w=1600&q=80')",
+          "url('https://www.google.com/url?sa=i&url=https%3A%2F%2Ftalhealthcare.com%2Fnine-things-to-do-after-accepting-a-new-job%2F&psig=AOvVaw00IfLFpsPRrOyW--y4hUVD&ust=1756536975909000&source=images&cd=vfe&opi=89978449&ved=0CBUQjRxqFwoTCJi2u6i4r48DFQAAAAAdAAAAABAE')",
         backgroundSize: "cover",
         backgroundPosition: "center",
         minHeight: "100vh",

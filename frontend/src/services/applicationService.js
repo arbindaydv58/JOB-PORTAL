@@ -6,7 +6,7 @@ const API_URL = "http://localhost:5000/api/application";
 const authAxios = axios.create({
   baseURL: API_URL,
   withCredentials: true,
-    headers: { "Content-Type": "application/json"}
+  headers: { "Content-Type": "application/json" },
 });
 
 // Automatically attach token
@@ -17,11 +17,12 @@ authAxios.interceptors.request.use((config) => {
 });
 
 // Create a new application
-export const createApplication = async (data) => {
+export const createApplication = async (formData) => {
   try {
-    const res = await authAxios.post("/createApplication", data);
-    console.log("Axios data check",res);
-    
+    const res = await authAxios.post("/createApplication", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    console.log("Axios data check", res);
     return res.data;
   } catch (err) {
     throw new Error(err.response?.data?.message || "Failed to apply");
@@ -32,11 +33,13 @@ export const createApplication = async (data) => {
 export const getApplications = async () => {
   try {
     const res = await authAxios.get("/getApplication");
-    console.log("hello there",res);
-    
+    console.log("hello there", res);
+
     return res.data; // array of applications
   } catch (err) {
-    throw new Error(err.response?.data?.message || "Failed to fetch applications");
+    throw new Error(
+      err.response?.data?.message || "Failed to fetch applications"
+    );
   }
 };
 
@@ -46,7 +49,9 @@ export const updateApplication = async (appId, status) => {
     const res = await authAxios.patch(`/${appId}`, { status });
     return res.data;
   } catch (err) {
-    throw new Error(err.response?.data?.message || "Failed to update application");
+    throw new Error(
+      err.response?.data?.message || "Failed to update application"
+    );
   }
 };
 
@@ -56,6 +61,8 @@ export const withdrawApplication = async (appId) => {
     const res = await authAxios.delete(`/${appId}`);
     return res.data;
   } catch (err) {
-    throw new Error(err.response?.data?.message || "Failed to withdraw application");
+    throw new Error(
+      err.response?.data?.message || "Failed to withdraw application"
+    );
   }
 };

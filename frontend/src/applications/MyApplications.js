@@ -77,13 +77,9 @@ function MyApplications() {
     setError("");
     try {
       const res = await getApplications();
-      console.log("Applications response:", res.data);
-
-      // Normalize backend response
       const apps = Array.isArray(res.data) ? res.data : res.data.applications || [];
       setApplications(apps);
     } catch (err) {
-      console.error("Error fetching applications:", err);
       setError(err.response?.data?.message || err.message || "Failed to fetch applications");
     } finally {
       setLoading(false);
@@ -93,7 +89,7 @@ function MyApplications() {
   const handleWithdraw = async (appId) => {
     try {
       await withdrawApplication(appId);
-      setApplications(prev => prev.filter(app => app.id !== appId));
+      setApplications((prev) => prev.filter((app) => app.id !== appId));
     } catch (err) {
       alert(err.response?.data?.message || err.message || "Failed to withdraw application");
     }
@@ -138,6 +134,22 @@ function MyApplications() {
           </p>
           <p><b>Cover Letter:</b> {app.cover_letter || "N/A"}</p>
           <p><b>Applied At:</b> {new Date(app.applied_at).toLocaleString()}</p>
+          
+          {/* CV Download Link */}
+          {app.cv_file && (
+            <p>
+              <b>CV:</b>{" "}
+              <a
+                href={app.cv_file}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: "#1e90ff" }}
+              >
+                View / Download
+              </a>
+            </p>
+          )}
+
           <button
             onClick={() => handleWithdraw(app.id)}
             style={{
@@ -159,5 +171,6 @@ function MyApplications() {
 }
 
 export default MyApplications;
+
 
 

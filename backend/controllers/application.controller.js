@@ -1,6 +1,24 @@
 const pool = require("../data/db");
 const { CustomError } = require("../middlewares/errorHandler.middleare");
 const { asyncHandler } = require("../utils/asynce-handler.utils");
+const multer = require("multer");
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const cloudinary = require("../config/cloudinary");
+
+// Setup Cloudinary storage for CVs
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: "jobportal/cvs",
+    resource_type: "raw", // for PDF/DOC files
+    allowed_formats: ["pdf", "doc", "docx"],
+  },
+});
+
+const upload = multer({ storage });
+
+// Middleware to handle single CV file
+const uploadCV = upload.single("cv");
 
 // create application (jobseeker only)
 const createApplication = asyncHandler(async (req, res) => {
@@ -17,17 +35,23 @@ const createApplication = asyncHandler(async (req, res) => {
     `SELECT 1 FROM applications WHERE job_id = $1 AND applicant_id = $2`,
     [job_id, applicant_id]
   );
-
   if (existing.rows.length > 0) {
     throw new CustomError("You have already applied for this job", 400);
   }
 
+  // Check if CV file uploaded
+  if (!req.file) {
+    throw new CustomError("Please upload your CV", 400);
+  }
+
+  const cv_file = req.file.path; // Cloudinary URL
+
   // Insert new application
   const inserted = await pool.query(
-    `INSERT INTO applications (job_id, applicant_id, cover_letter, status, applied_at) 
-     VALUES ($1, $2, $3, 'pending', NOW()) 
+    `INSERT INTO applications (job_id, applicant_id, cover_letter, cv_file, status, applied_at) 
+     VALUES ($1, $2, $3, $4, 'pending', NOW()) 
      RETURNING id`,
-    [job_id, applicant_id, cover_letter]
+    [job_id, applicant_id, cover_letter, cv_file]
   );
 
   const applicationId = inserted.rows[0].id;
@@ -46,6 +70,7 @@ const createApplication = asyncHandler(async (req, res) => {
     data: result.rows[0],
   });
 });
+
 
 //get application (admin and jobs)
 const getApplication = asyncHandler(async (req, res) => {
@@ -155,4 +180,5 @@ module.exports = {
   getApplication,
   updateApplication,
   withdrawApplication,
+  uploadCV
 };

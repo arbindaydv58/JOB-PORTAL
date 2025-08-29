@@ -19,13 +19,9 @@ function AdminApplication() {
     setError("");
     try {
       const res = await getApplications();
-      console.log("Admin Applications response:", res.data);
-
-      // ✅ backend returns array directly
       const apps = Array.isArray(res?.data) ? res.data : [];
       setApplications(apps);
     } catch (err) {
-      console.error("Error fetching admin applications:", err);
       setError(err.response?.data?.message || err.message || "Failed to fetch applications");
     } finally {
       setLoading(false);
@@ -37,7 +33,7 @@ function AdminApplication() {
       await withdrawApplication(appId);
       setApplications((prev) => prev.filter((app) => app.id !== appId));
     } catch (err) {
-      alert(err.response?.data?.message || err.message || "Failed to withdraw application");
+      alert(err.response?.data?.message || err.message || "Failed to delete application");
     }
   };
 
@@ -96,6 +92,21 @@ function AdminApplication() {
           <p><b>Applicant ID:</b> {app.applicant_id}</p>
           <p><b>Cover Letter:</b> {app.cover_letter}</p>
           <p><b>Applied At:</b> {new Date(app.applied_at).toLocaleString()}</p>
+
+          {/* CV Download Link */}
+          {app.cv_file && (
+            <p>
+              <b>CV:</b>{" "}
+              <a
+                href={app.cv_file}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: "#1e90ff" }}
+              >
+                View / Download
+              </a>
+            </p>
+          )}
 
           <div style={{ marginTop: "10px" }}>
             <button

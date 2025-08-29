@@ -58,19 +58,38 @@ import { createApplication } from "../services/applicationService";
 function ApplyJob() {
   const { jobId } = useParams();
   const [coverLetter, setCoverLetter] = useState("");
+  const [cvFile, setCvFile] = useState(null); // new state for CV
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  const handleFileChange = (e) => {
+    setCvFile(e.target.files[0]);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setMessage("");
+
+    if (!cvFile) {
+      setMessage("❌ Please upload your CV");
+      setLoading(false);
+      return;
+    }
+
     try {
-      const res = await createApplication({ job_id: jobId, cover_letter: coverLetter });
+      const formData = new FormData();
+      formData.append("job_id", jobId);
+      formData.append("cover_letter", coverLetter);
+      formData.append("cv", cvFile); // must match backend field name
+
+      const res = await createApplication(formData);
       console.log("Created application:", res.data);
+
       setMessage("✅ Application submitted successfully!");
       setCoverLetter("");
+      setCvFile(null);
 
       // Navigate after a short delay to ensure backend has saved
       setTimeout(() => navigate("/my-applications"), 500);
@@ -92,6 +111,13 @@ function ApplyJob() {
           required
           style={{ width: "100%", height: "150px", marginBottom: "15px", padding: "10px" }}
         />
+        <input
+          type="file"
+          accept=".pdf,.doc,.docx"
+          onChange={handleFileChange}
+          required
+          style={{ marginBottom: "15px" }}
+        />
         <button type="submit" disabled={loading}>
           {loading ? "Submitting..." : "Submit Application"}
         </button>
@@ -106,3 +132,4 @@ function ApplyJob() {
 }
 
 export default ApplyJob;
+
