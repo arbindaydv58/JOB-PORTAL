@@ -1,25 +1,55 @@
-require("dotenv").config();
 const nodemailer = require("nodemailer");
-app.get("/test-email", async (req, res) => {
-  const transporter = nodemailer.createTransporter({
-    host: process.env.SMTP_HOST || "smtp.gmail.com",
-    port: process.env.SMTP_PORT || 587,
-    secure: false,
+
+const createTransporter = () => {
+  return nodemailer.createTransport({
+    service: "gmail",
     auth: {
       user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASSWORD,
+      pass: process.env.SMTP_PASSWORD, // Gmail app password
     },
+    tls: { rejectUnauthorized: true }, // enforce secure TLS
   });
+};
 
-  try {
-    await transporter.sendMail({
-      from: "learn.subedibhuwan2000@gmail.com",
-      to: "learn.subedibhuwan2000@gmail.com", // Send to yourself
-      subject: "Test Email",
-      html: "<h2>Email service is working! 🎉</h2>",
-    });
-    res.json({ success: true, message: "Test email sent!" });
-  } catch (error) {
-    res.json({ success: false, error: error.message });
-  }
-});
+const sendVerificationEmail = async (email, token, name) => {
+  const transporter = createTransporter();
+  const url = `${process.env.CLIENT_URL}/verify-email?token=${token}`;
+
+  const mailOptions = {
+    from: { name: "HireHub", address: process.env.SMTP_USER },
+    to: email,
+    subject: "Verify Your Email - HireHub",
+    html: `<p>Hello ${name},</p><p>Please verify your email:</p><a href="${url}">${url}</a>`,
+  };
+
+  return transporter.sendMail(mailOptions);
+};
+
+const sendPasswordResetEmail = async (email, token, name) => {
+  const transporter = createTransporter();
+  const url = `${process.env.CLIENT_URL}/reset-password?token=${token}`;
+
+  const mailOptions = {
+    from: { name: "HireHub Security", address: process.env.SMTP_USER },
+    to: email,
+    subject: "Password Reset Request - HireHub",
+    html: `<p>Hi ${name},</p><p>Reset your password here:</p><a href="${url}">${url}</a>`,
+  };
+
+  return transporter.sendMail(mailOptions);
+};
+
+const sendWelcomeEmail = async (email, name) => {
+  const transporter = createTransporter();
+
+  const mailOptions = {
+    from: { name: "HireHub Team", address: process.env.SMTP_USER },
+    to: email,
+    subject: "Welcome to HireHub!",
+    html: `<p>Welcome ${name}!</p><p>Your account has been activated successfully 🎉</p>`,
+  };
+
+  return transporter.sendMail(mailOptions);
+};
+
+module.exports = { sendVerificationEmail, sendPasswordResetEmail, sendWelcomeEmail };

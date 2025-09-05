@@ -114,7 +114,7 @@ function Signup() {
               onChange={handleChange}
             >
               <option value="jobseeker">Job Seeker</option>
-              <option value="employer">Employer</option>
+              <option value="admin">Admin</option>
             </select>
           </div>
 

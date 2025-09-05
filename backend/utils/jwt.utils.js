@@ -1,37 +1,33 @@
 const jwt = require("jsonwebtoken");
 
-// Read env variables and set defaults
-const JWT_SECRET = process.env.JWT_SECRET || "default_secret_key";
+if (!process.env.JWT_SECRET) {
+  throw new Error("JWT_SECRET must be set in environment variables");
+}
+
+const JWT_SECRET = process.env.JWT_SECRET;
 let JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "1h";
 
-// Ensure expiresIn is a valid type (number or string)
+// Validate format (1h, 60, 2d, etc.)
 if (!/^\d+$/.test(JWT_EXPIRES_IN) && !/^\d+[smhd]$/.test(JWT_EXPIRES_IN)) {
   console.warn(
-    `[WARNING] JWT_EXPIRES_IN="${JWT_EXPIRES_IN}" is invalid. Using default "1h".`
+    `[WARNING] Invalid JWT_EXPIRES_IN="${JWT_EXPIRES_IN}". Using default "1h".`
   );
   JWT_EXPIRES_IN = "1h";
 }
 
-// Generate JWT token
 const generateToken = (user) => {
   return jwt.sign(
-    {
-      id: user.id,
-      email: user.email,
-      full_name: user.full_name,
-      user_type: user.user_type,
-    },
+    { id: user.id, user_type: user.user_type }, // keep payload minimal
     JWT_SECRET,
-    { expiresIn: JWT_EXPIRES_IN }
+    { expiresIn: JWT_EXPIRES_IN, algorithm: "HS256" }
   );
 };
 
-// Verify JWT token
 const verifyToken = (token) => {
   try {
-    return jwt.verify(token, JWT_SECRET);
+    return { valid: true, decoded: jwt.verify(token, JWT_SECRET) };
   } catch (err) {
-    return null; // invalid or expired token
+    return { valid: false, error: err.message };
   }
 };
 
