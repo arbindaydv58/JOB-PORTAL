@@ -1,0 +1,62 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: jobportal-db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Arbinda58
+      POSTGRES_DB: JOBPORTAL
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db-init:/docker-entrypoint-initdb.d
+
+  backend:
+    build: ./backend
+    container_name: jobportal-backend
+    restart: always
+    env_file:
+      - ./backend/.env
+    environment:
+      DB_HOST: postgres   # Use the service name for Docker networking
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: Arbinda58
+      DB_NAME: JOBPORTAL
+    depends_on:
+      - postgres
+    ports:
+      - "5000:5000"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: DockerFile
+    container_name: jobportal-frontend
+    restart: always
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: jobportal-pgadmin
+    restart: always
+    ports:
+      - "8080:80"
+    environment:
+      # You can remove these if you want users to register themselves
+      PGADMIN_DEFAULT_EMAIL: arbind91117@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_DEFAULT_USER_TYPE: admin
+      DUMMY: "value"   # just to satisfy YAML
+    depends_on:
+      - postgres
+
+volumes:
+  pgdata:

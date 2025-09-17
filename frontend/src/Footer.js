@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 
 function Footer() {
@@ -12,7 +12,7 @@ function Footer() {
             "Browse jobs",
             "Browse companies",
             "Salaries",
-            "Indeed Events",
+            "HireHub Events",
           ].map((text, idx) => (
             <li key={idx}>
               <Link href="#" style={styles.link}>
@@ -23,11 +23,11 @@ function Footer() {
         </ul>
         <ul style={styles.linkList}>
           {[
-            "Work at Indeed",
+            "Work at HireHub",
             "Countries",
             "About",
             "Help",
-            "ESG at Indeed",
+            "ESG at HireHub",
             "Post a job",
           ].map((text, idx) => (
             <li key={idx}>
@@ -44,7 +44,7 @@ function Footer() {
         <ul style={styles.legalLinks}>
           {[
             "Your Privacy Choices",
-            "Accessibility at Indeed",
+            "Accessibility at HireHub",
             "Privacy Center and Ad Choices",
             "Terms",
           ].map((text, idx) => (
