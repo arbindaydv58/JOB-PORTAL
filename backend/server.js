@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: `http://localhost:3000`, // frontend URL
+    origin: `https://job-portal-2-byi8.onrender.com`, // frontend URL
     credentials: true,
   })
 );
