@@ -13,7 +13,7 @@ const createTransporter = () => {
 
 const sendVerificationEmail = async (email, token, name) => {
   const transporter = createTransporter();
-  const url = `${process.env.CLIENT_URL}/verify-email?token=${token}`;
+  const url = `http://localhost:5000/api/auth/verify-email?token=${token}`;
 
   const mailOptions = {
     from: { name: "HireHub", address: process.env.SMTP_USER },

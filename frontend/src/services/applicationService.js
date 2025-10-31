@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api/application";
+const API_URL = "http://localhost:5000/api";
 
 // Axios instance with auth token
 const authAxios = axios.create({
@@ -19,7 +19,7 @@ authAxios.interceptors.request.use((config) => {
 // Create a new application
 export const createApplication = async (formData) => {
   try {
-    const res = await authAxios.post("/createApplication", formData, {
+    const res = await authAxios.post("/application/createApplication", formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
     console.log("Axios data check", res);
@@ -32,7 +32,7 @@ export const createApplication = async (formData) => {
 // Get applications (for user or admin)
 export const getApplications = async () => {
   try {
-    const res = await authAxios.get("/getApplication");
+    const res = await authAxios.get("/application/getApplication");
     console.log("hello there", res);
 
     return res.data; // array of applications
@@ -46,7 +46,7 @@ export const getApplications = async () => {
 // Update application status (admin)
 export const updateApplication = async (appId, status) => {
   try {
-    const res = await authAxios.patch(`/${appId}`, { status });
+    const res = await authAxios.patch(`/application/${appId}`, { status });
     return res.data;
   } catch (err) {
     throw new Error(
@@ -58,7 +58,7 @@ export const updateApplication = async (appId, status) => {
 // Withdraw an application (jobseeker)
 export const withdrawApplication = async (appId) => {
   try {
-    const res = await authAxios.delete(`/${appId}`);
+    const res = await authAxios.delete(`/application/${appId}`);
     return res.data;
   } catch (err) {
     throw new Error(
