@@ -13,7 +13,7 @@ const createTransporter = () => {
 
 const sendVerificationEmail = async (email, token, name) => {
   const transporter = createTransporter();
-  const url = `http://localhost:5000/api/auth/verify-email?token=${token}`;
+  const url = `https://job-portal-1-5w1d.onrender.com/api/auth/verify-email?token=${token}`;
 
   const mailOptions = {
     from: { name: "HireHub", address: process.env.SMTP_USER },
