@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api";
+const API_URL = "https://job-portal-1-5w1d.onrender.com/api";
 
 // Axios instance with auth token
 const authAxios = axios.create({
